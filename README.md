@@ -721,7 +721,7 @@ while True:
         set_neopixel()
 ```
 
-### STEP 10:
+### STEP 11:
 Reformat the code to support multiple dots.
 
 ```python
@@ -891,7 +891,7 @@ while True:
         set_neopixel()
 ```
 
-### STEP 11
+### STEP 12
 Instead of constantly moving the current dot, create a new dot each time and remove the oldest dot. This will help when the snake has a long tail, as this will only require the screen to refresh twice when the snake is moving.
 
 ```python
@@ -1079,7 +1079,7 @@ while True:
         set_neopixel()
 ```
 
-### STEP 12:
+### STEP 13:
 Add length to snake when the snake eats food and also detect when you collide with the tail.
 
 ```python
