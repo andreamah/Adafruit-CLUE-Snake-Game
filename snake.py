@@ -131,7 +131,7 @@ set_neopixel()
 # start the game loop
 while True:
     # NOTE: uncomment if not on simulator
-    time.sleep(0.1)
+    # time.sleep(0.1)
 
     if (clue.button_a):
         if not last_pressed_button == "A":
