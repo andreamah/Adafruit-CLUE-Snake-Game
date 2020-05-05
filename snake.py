@@ -25,4 +25,5 @@ stuff_on_screen.append(first_dot)
 
 # game loop
 while True:
+    first_dot.x -=1
     pass
