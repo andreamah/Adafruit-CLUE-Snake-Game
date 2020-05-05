@@ -36,6 +36,13 @@ def make_dot(x,y,fill,size=5):
     dot_group.append(dot)
     return dot_group 
 
+# show our "game over" screen
+def game_over():
+    clue_data = clue.simple_text_display(text_scale=3)
+    clue_data[1].text = "GAME OVER!"
+    clue_data[3].text = "POINTS: " + str(points)
+    clue_data.show()
+
 # make a group and make sure that the CLUE's
 # display is focused on this group
 stuff_on_screen = displayio.Group(max_size=100)
@@ -107,6 +114,10 @@ while True:
     first_dot.y += offset_tuple[1] *5
 
     direction = new_direction
+
+    # make sure that it isn't hitting any of the screen's sides
+    if first_dot.x > 240 or first_dot.x < 0 or first_dot.y > 240 or first_dot.y < 0:
+        game_over()
 
     # check whether the snake ate the food!
 
