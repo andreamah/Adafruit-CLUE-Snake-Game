@@ -126,6 +126,9 @@ points = 0
 set_neopixel()
 
 while True:
+    # NOTE: uncomment if NOT on simulator
+    # time.sleep(0.1)
+
     if (clue.button_a):
         if not last_pressed_button == "A":
             # query the direction_left_of dictionary to find
@@ -143,6 +146,7 @@ while True:
         new_direction = direction
         last_pressed_button = None
 
+    # get the new co-ordinates, given the new direction
     new_x_offset,new_y_offset = new_position[new_direction]
 
     direction = new_direction
@@ -170,7 +174,7 @@ while True:
     for dot in snake_dots[1:]:
         if (has_overlap(dot,new_lead_dot)):
             game_over()
-            
+
     # make sure that it isn't hitting any of the screen's sides
     if new_lead_dot.x > 240 or new_lead_dot.x < 0 or new_lead_dot.y > 240 or new_lead_dot.y < 0:
         game_over()
