@@ -47,15 +47,31 @@ new_position = {
     "down":(0,1)
 }
 
+
+# If the last_pressed_button is not the button that
+# is currently being pushed, we know that the button
+# has not been registered yet
+last_pressed_button = None
+
 # game loop
 direction = "left"
 while True:
     if (clue.button_a):
-        new_direction = direction_left_of[direction]
+        if not last_pressed_button == "A":
+            # query the direction_left_of dictionary to find
+            # where to go next
+            new_direction = direction_left_of[direction]
+            last_pressed_button = "A"
     elif (clue.button_b):
-        new_direction = direction_right_of[direction]
+        if not last_pressed_button == "B":
+            # like above, find where to go next using the 
+            # direction_right_of dictionary
+            new_direction = direction_right_of[direction]
+            last_pressed_button = "B"
     else:
+        # otherwise, no direction change!
         new_direction = direction
+        last_pressed_button = None
 
     offset_tuple = new_position[new_direction]
     first_dot.x += offset_tuple[0]
