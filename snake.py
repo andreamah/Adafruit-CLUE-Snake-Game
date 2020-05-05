@@ -164,6 +164,13 @@ while True:
     # and let's grab the new head dot so that we can determine where we are!
     new_lead_dot = snake_dots[0]
 
+    # make sure that the snake isn't running into itself by
+    # looking at all dots aside from the first dot and making sure that
+    # the first dot doesn't overlap with any of the others
+    for dot in snake_dots[1:]:
+        if (has_overlap(dot,new_lead_dot)):
+            game_over()
+            
     # make sure that it isn't hitting any of the screen's sides
     if new_lead_dot.x > 240 or new_lead_dot.x < 0 or new_lead_dot.y > 240 or new_lead_dot.y < 0:
         game_over()
@@ -176,6 +183,9 @@ while True:
         points +=1
         print("You got a point! Now you're at " + str(points) + " point(s)")
         reset_food()
+
+        # make the snake longer!
+        add_dot(x,y)
 
         # change the neopixel color
         set_neopixel()
