@@ -36,6 +36,14 @@ def make_dot(x,y,fill,size=5):
     dot_group.append(dot)
     return dot_group 
 
+# add a dot to the snake
+def add_dot(x,y,position=-1):
+    global snake_dots
+    global stuff_on_screen
+    new_dot = make_dot(x,y,clue.RED,5)
+    snake_dots.insert(position,new_dot)
+    stuff_on_screen.append(new_dot)
+
 # show our "game over" screen
 def game_over():
     clue_data = clue.simple_text_display(text_scale=3)
@@ -63,12 +71,15 @@ def set_neopixel():
 stuff_on_screen = displayio.Group(max_size=100)
 board.DISPLAY.show(stuff_on_screen)
 
+# make a list of the snake's dots
+snake_dots = []
+
 # make a dot for food and show it on the screen
 food_dot = make_dot(x=random.randint(5,235),y=random.randint(5,235),fill=clue.AQUA)
 stuff_on_screen.append(food_dot)
 
-first_dot = make_dot(120,120,clue.RED,5)
-stuff_on_screen.append(first_dot)
+# we gotta get a first dot going!
+add_dot(120,120)
 
 # some dictionaries to help us choose new directions
 # for our snake
@@ -126,20 +137,24 @@ while True:
         last_pressed_button = None
 
     offset_tuple = new_position[new_direction]
-    first_dot.x += offset_tuple[0] *5
-    first_dot.y += offset_tuple[1] *5
+
+    # the first element of the snake_dots array is the current leading dot
+    # use this to determine the position of the newest head dot
+    old_lead_dot = snake_dots[0]
+    old_lead_dot.x += offset_tuple[0] *5
+    old_lead_dot.y += offset_tuple[1] *5
 
     direction = new_direction
 
     # make sure that it isn't hitting any of the screen's sides
-    if first_dot.x > 240 or first_dot.x < 0 or first_dot.y > 240 or first_dot.y < 0:
+    if old_lead_dot.x > 240 or old_lead_dot.x < 0 or old_lead_dot.y > 240 or old_lead_dot.y < 0:
         game_over()
 
     # check whether the snake ate the food!
     # give the overlap check an uncertainty of 5
     # so that our snake can still eat the food,
     # even if it's a little off
-    if (has_overlap(food_dot, first_dot, 5)):
+    if (has_overlap(food_dot, old_lead_dot, 5)):
         points +=1
         print("You got a point! Now you're at " + str(points) + " point(s)")
         reset_food()
