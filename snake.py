@@ -42,6 +42,21 @@ def game_over():
     clue_data[1].text = "GAME OVER!"
     clue_data[3].text = "POINTS: " + str(points)
     clue_data.show()
+    flash_lights()
+
+# make your red light flash!
+def flash_lights():
+    clue.red_led = True
+    time.sleep(0.1)
+    clue.red_led = False
+    time.sleep(0.1)
+
+def set_neopixel():
+    global points
+    
+    # change the neopixel color:
+    new_light_color = clue.RAINBOW[points%len(clue.RAINBOW)]
+    clue.pixel.fill(new_light_color)
 
 # make a group and make sure that the CLUE's
 # display is focused on this group
@@ -88,8 +103,9 @@ last_pressed_button = None
 # game loop
 direction = "left"
 
-# let's start the points at 0 
+# let's start the points at 0 and set the neopixel to the first color
 points = 0
+set_neopixel()
 
 while True:
     if (clue.button_a):
@@ -120,7 +136,6 @@ while True:
         game_over()
 
     # check whether the snake ate the food!
-
     # give the overlap check an uncertainty of 5
     # so that our snake can still eat the food,
     # even if it's a little off
@@ -128,3 +143,6 @@ while True:
         points +=1
         print("You got a point! Now you're at " + str(points) + " point(s)")
         reset_food()
+        
+        # change the neopixel color
+        set_neopixel()
