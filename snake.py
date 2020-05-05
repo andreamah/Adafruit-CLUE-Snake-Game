@@ -44,6 +44,13 @@ def add_dot(x,y,position=-1):
     snake_dots.insert(position,new_dot)
     stuff_on_screen.append(new_dot)
 
+# remove a dot from the end of the snake
+def pop_end_dot():
+    global snake_dots
+    global stuff_on_screen
+    end_dot = snake_dots.pop()
+    stuff_on_screen.remove(end_dot)
+
 # show our "game over" screen
 def game_over():
     clue_data = clue.simple_text_display(text_scale=3)
@@ -136,28 +143,39 @@ while True:
         new_direction = direction
         last_pressed_button = None
 
-    offset_tuple = new_position[new_direction]
+    new_x_offset,new_y_offset = new_position[new_direction]
+
+    direction = new_direction
 
     # the first element of the snake_dots array is the current leading dot
     # use this to determine the position of the newest head dot
     old_lead_dot = snake_dots[0]
-    old_lead_dot.x += offset_tuple[0] *5
-    old_lead_dot.y += offset_tuple[1] *5
 
-    direction = new_direction
+    # if we just move by 1 pixel each loop, that might be too slow...
+    # so we're moving by 5 pixels
+    x = old_lead_dot.x + (new_x_offset * 5)
+    y = old_lead_dot.y + (new_y_offset * 5)
+
+    # let's add the new head dot and remove the last one
+    # so that our snake keeps moving
+    add_dot(x,y,0)
+    pop_end_dot()
+    
+    # and let's grab the new head dot so that we can determine where we are!
+    new_lead_dot = snake_dots[0]
 
     # make sure that it isn't hitting any of the screen's sides
-    if old_lead_dot.x > 240 or old_lead_dot.x < 0 or old_lead_dot.y > 240 or old_lead_dot.y < 0:
+    if new_lead_dot.x > 240 or new_lead_dot.x < 0 or new_lead_dot.y > 240 or new_lead_dot.y < 0:
         game_over()
 
     # check whether the snake ate the food!
     # give the overlap check an uncertainty of 5
     # so that our snake can still eat the food,
     # even if it's a little off
-    if (has_overlap(food_dot, old_lead_dot, 5)):
+    if (has_overlap(food_dot, new_lead_dot, 5)):
         points +=1
         print("You got a point! Now you're at " + str(points) + " point(s)")
         reset_food()
-        
+
         # change the neopixel color
         set_neopixel()
