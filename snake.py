@@ -23,7 +23,20 @@ board.DISPLAY.show(stuff_on_screen)
 first_dot = make_dot(120,120,clue.RED,5)
 stuff_on_screen.append(first_dot)
 
+
+# lookup for x and y offsets given the direction
+new_position = {
+    "left":(-1,0),
+    "up":(0,-1),
+    "right":(1,0),
+    "down":(0,1)
+}
+
+# you can change this value to "up", "right", or "down" to change the direction of the movement.
+first_direction = "left"
 # game loop
 while True:
-    first_dot.x -=1
+    offset_tuple = new_position[first_direction]
+    first_dot.x += offset_tuple[0]
+    first_dot.y += offset_tuple[1]
     pass
