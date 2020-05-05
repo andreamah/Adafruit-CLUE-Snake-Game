@@ -23,6 +23,21 @@ board.DISPLAY.show(stuff_on_screen)
 first_dot = make_dot(120,120,clue.RED,5)
 stuff_on_screen.append(first_dot)
 
+# some dictionaries to help us choose new directions
+# for our snake
+direction_right_of={
+    "left":"up",
+    "up":"right",
+    "right":"down",
+    "down":"left"
+}
+
+direction_left_of={
+    "left":"down",
+    "up":"left",
+    "right":"up",
+    "down":"right"
+}
 
 # lookup for x and y offsets given the direction
 new_position = {
@@ -32,11 +47,18 @@ new_position = {
     "down":(0,1)
 }
 
-# you can change this value to "up", "right", or "down" to change the direction of the movement.
-first_direction = "left"
 # game loop
+direction = "left"
 while True:
-    offset_tuple = new_position[first_direction]
+    if (clue.button_a):
+        new_direction = direction_left_of[direction]
+    elif (clue.button_b):
+        new_direction = direction_right_of[direction]
+    else:
+        new_direction = direction
+
+    offset_tuple = new_position[new_direction]
     first_dot.x += offset_tuple[0]
     first_dot.y += offset_tuple[1]
-    pass
+
+    direction = new_direction
