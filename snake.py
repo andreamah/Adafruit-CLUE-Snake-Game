@@ -5,6 +5,27 @@ import displayio
 import time
 import random
 
+
+# put the food somewhere else on the screen
+def reset_food():
+    global food_dot
+    food_dot.x,food_dot.y = (random.randint(5,235),random.randint(5,235))
+
+# given an uncertainty value, see if two values are the same
+def approx_equals(num_one,num_two,uncertainty):
+    if (num_one + uncertainty >= num_two and num_one-uncertainty<=num_two):
+        return True
+    else:
+        return False
+
+# given an uncertainty value, see if two dots are overlapping
+def has_overlap(dot_one,dot_two,uncertainty=0):
+    if (approx_equals(dot_one.y,dot_two.y,uncertainty) and 
+        approx_equals(dot_one.x, dot_two.x,uncertainty)):
+        return True
+    else:
+        return False
+
 # create a new dot
 def make_dot(x,y,fill,size=5):
     # use the group to set x and y position
@@ -19,6 +40,10 @@ def make_dot(x,y,fill,size=5):
 # display is focused on this group
 stuff_on_screen = displayio.Group(max_size=100)
 board.DISPLAY.show(stuff_on_screen)
+
+# make a dot for food and show it on the screen
+food_dot = make_dot(x=random.randint(5,235),y=random.randint(5,235),fill=clue.AQUA)
+stuff_on_screen.append(food_dot)
 
 first_dot = make_dot(120,120,clue.RED,5)
 stuff_on_screen.append(first_dot)
@@ -55,6 +80,10 @@ last_pressed_button = None
 
 # game loop
 direction = "left"
+
+# let's start the points at 0 
+points = 0
+
 while True:
     if (clue.button_a):
         if not last_pressed_button == "A":
@@ -74,7 +103,17 @@ while True:
         last_pressed_button = None
 
     offset_tuple = new_position[new_direction]
-    first_dot.x += offset_tuple[0]
-    first_dot.y += offset_tuple[1]
+    first_dot.x += offset_tuple[0] *5
+    first_dot.y += offset_tuple[1] *5
 
     direction = new_direction
+
+    # check whether the snake ate the food!
+
+    # give the overlap check an uncertainty of 5
+    # so that our snake can still eat the food,
+    # even if it's a little off
+    if (has_overlap(food_dot, first_dot, 5)):
+        points +=1
+        print("You got a point! Now you're at " + str(points) + " point(s)")
+        reset_food()
