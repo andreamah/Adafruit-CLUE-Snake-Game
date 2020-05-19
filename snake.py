@@ -5,6 +5,7 @@ import displayio
 import time
 import random
 
+
 # put the food somewhere else on the screen
 def reset_food():
     global food_dot
@@ -72,6 +73,21 @@ def set_neopixel():
     new_light_color = clue.RAINBOW[points%len(clue.RAINBOW)]
     clue.pixel.fill(new_light_color)
 
+# make a group and make sure that the CLUE's
+# display is focused on this group
+stuff_on_screen = displayio.Group(max_size=100)
+board.DISPLAY.show(stuff_on_screen)
+
+# make a list of the snake's dots
+snake_dots = []
+
+# make a dot for food and show it on the screen
+food_dot = make_dot(x=random.randint(5,235),y=random.randint(5,235),fill=clue.AQUA)
+stuff_on_screen.append(food_dot)
+
+# we gotta get a first dot going!
+add_dot(120,120)
+
 # some dictionaries to help us choose new directions
 # for our snake
 direction_right_of={
@@ -88,6 +104,7 @@ direction_left_of={
     "down":"right"
 }
 
+# lookup for x and y offsets given the direction
 new_position = {
     "left":(-1,0),
     "up":(0,-1),
@@ -96,41 +113,20 @@ new_position = {
 }
 
 
-# beginning of the main program
-
-# make a group and make sure that the CLUE's
-# display is focused on this group
-stuff_on_screen = displayio.Group(max_size=100)
-board.DISPLAY.show(stuff_on_screen)
-
-# make a list of the snake's dots
-snake_dots = []
-
-# make a dot for food and show it on the screen
-food_dot = make_dot(x=random.randint(5,235),y=random.randint(5,235),fill=clue.AQUA)
-stuff_on_screen.append(food_dot)
-
-# we gotta get a first dot going!
-add_dot(120,120)
-
-# the dot heads left first
-direction = "left"
-
-# to make sure that holding the A/B buttons
-# would not keep turning our snake
-
 # If the last_pressed_button is not the button that
 # is currently being pushed, we know that the button
 # has not been registered yet
 last_pressed_button = None
 
+# game loop
+direction = "left"
+
 # let's start the points at 0 and set the neopixel to the first color
 points = 0
 set_neopixel()
 
-# start the game loop
 while True:
-    # NOTE: uncomment if not on simulator
+    # NOTE: uncomment if NOT on simulator
     # time.sleep(0.1)
 
     if (clue.button_a):
@@ -150,8 +146,9 @@ while True:
         new_direction = direction
         last_pressed_button = None
 
-    # let's get the new co-ordinates given the new direction
+    # get the new co-ordinates, given the new direction
     new_x_offset,new_y_offset = new_position[new_direction]
+
     direction = new_direction
 
     # the first element of the snake_dots array is the current leading dot
@@ -183,7 +180,6 @@ while True:
         game_over()
 
     # check whether the snake ate the food!
-
     # give the overlap check an uncertainty of 5
     # so that our snake can still eat the food,
     # even if it's a little off
@@ -194,8 +190,6 @@ while True:
 
         # make the snake longer!
         add_dot(x,y)
-        
+
         # change the neopixel color
         set_neopixel()
-
-        
